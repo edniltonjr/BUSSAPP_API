@@ -52,7 +52,8 @@ public class MotoristaService {
 
 	@POST
 	@Path("/inserir")
-	public Boolean insertOne(Motorista motorista) {
+	public Boolean insertOne(Motorista motorista) { // você só consegue recuperar classes, se for um Integer, String, qualqeur tipo primitivo
+		//vai dar erro, se for algumm tipo primitivo faz pela URL
 		try {
 			return motoristaDao.insertOne(motorista);
 		} catch (SQLException e) {
