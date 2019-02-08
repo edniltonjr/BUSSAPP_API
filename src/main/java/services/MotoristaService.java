@@ -25,10 +25,10 @@ public class MotoristaService {
 	}
 
 	@GET
-	@Path("/{cpf}/busca")
-	public Motorista findOne(@PathParam("cpf") String cpf) {
+	@Path("/{id_motorista}/busca")
+	public Motorista findOne(@PathParam("id_motorista") Integer id_motorista) {
 		try {
-			return motoristaDao.findOne(cpf);
+			return motoristaDao.findOne(id_motorista);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
