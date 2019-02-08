@@ -14,8 +14,15 @@ import entities.ViagemConteudo;
 
 public class ViagemDao extends BaseDao {
 
+	private MotoristaDao motoristaDao;
+	private VeiculoDao veiculoDao;
+	private FuncionarioDao funcionarioDao;
+
 	public ViagemDao() {
 		super();
+		motoristaDao = new MotoristaDao();
+		veiculoDao = new VeiculoDao();
+		funcionarioDao = new FuncionarioDao();
 	}
 
 	public Boolean insertOne(Viagem v) throws SQLException {
@@ -23,12 +30,10 @@ public class ViagemDao extends BaseDao {
 
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 
-		ps.setInt(1, v.getMotorista().getId());
-		ps.setInt(2, v.getVeiculo().getId());
+		ps.setInt(1, v.getMotorista().getId_motorista());
+		ps.setInt(2, v.getVeiculo().getId_veiculo());
 		ps.setString(3, v.getTipo_viagem());
-		errorCalendar(v.getData_viagem());
-		Timestamp timestamp = new Timestamp(v.getData_viagem().getTimeInMillis());
-		ps.setTimestamp(4, timestamp);
+		ps.setTimestamp(4, getTimestamp(v.getData_viagem()));
 
 		return ps.executeUpdate() > 0;
 	}
@@ -38,15 +43,38 @@ public class ViagemDao extends BaseDao {
 
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 
-		ps.setInt(1, v.getMotorista().getId());
-		ps.setInt(2, v.getVeiculo().getId());
+		ps.setInt(1, v.getMotorista().getId_motorista());
+		ps.setInt(2, v.getVeiculo().getId_veiculo());
 		ps.setString(3, v.getTipo_viagem());
-		errorCalendar(v.getData_viagem());
-		Timestamp timestamp = new Timestamp(v.getData_viagem().getTimeInMillis());
-		ps.setTimestamp(4, timestamp);
+		ps.setTimestamp(4, getTimestamp(v.getData_viagem()));
 		ps.setInt(5, v.getId_viagem());
 
 		return ps.executeUpdate() > 0;
+	}
+
+	public Viagem findOne(Integer id_viagem) throws SQLException {
+		String sql = "SELECT * FROM viagens AS v " + "INNER JOIN motoristas AS m ON m.id_motorista = v.id_motorista "
+				+ "INNER JOIN veiculos AS ve ON ve.id_veiculo = v.id_veiculo WHERE v.id_viagem = ?;";
+
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+
+		ps.setInt(1, id_viagem);
+
+		ResultSet rs = ps.executeQuery();
+
+		Viagem v = null;
+
+		if (rs.next()) {
+			v = new Viagem();
+			v.setId_viagem(rs.getInt("id_viagem"));
+			v.setMotorista(motoristaDao.findOne(rs.getInt("id_motorista")));
+			v.setVeiculo(veiculoDao.findOne(rs.getInt("id_veiculo")));
+			v.setTipo_viagem(rs.getString("tipo_viagem"));
+			v.setData_viagem(getCalendar(rs.getTimestamp("data_viagem")));
+
+		}
+
+		return v;
 	}
 
 	public List<Viagem> findAll() throws SQLException {
@@ -63,25 +91,15 @@ public class ViagemDao extends BaseDao {
 			Viagem v = new Viagem();
 
 			v.setId_viagem(rs.getInt("id_viagem"));
-			v.getMotorista().setNome(rs.getString("m.nome"));
-			v.getMotorista().setId(rs.getInt("id_motorista"));
-			v.getVeiculo().setNome(rs.getString("ve.modelo"));
-			v.getVeiculo().setId(rs.getInt("id_veiculo"));
+			v.setMotorista(motoristaDao.findOne(rs.getInt("id_motorista")));
+			v.setVeiculo(veiculoDao.findOne(rs.getInt("id_veiculo")));
 			v.setTipo_viagem(rs.getString("tipo_viagem"));
-
-			Timestamp t = rs.getTimestamp("data_viagem");
-			Calendar c = Calendar.getInstance();
-			c.setTimeInMillis(t.getTime());
-			v.setData_viagem(c);
+			v.setData_viagem(getCalendar(rs.getTimestamp("data_viagem")));
 
 			viagens.add(v);
 		}
 
 		return viagens;
-	}
-
-	private void errorCalendar(Calendar c) {
-		// c.set(Calendar.HOUR, c.get(Calendar.HOUR) - 2);
 	}
 
 	public Boolean insertPeopleViagem(ViagemConteudo vc) throws SQLException {
@@ -90,18 +108,18 @@ public class ViagemDao extends BaseDao {
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 
 		ps.setInt(1, vc.getViagem().getId_viagem());
-		ps.setInt(2, vc.getFuncionario().getId());
+		ps.setInt(2, vc.getFuncionario().getId_funcionario());
 
 		return ps.executeUpdate() > 0;
 	}
 
 	public Boolean deletePeopleViagem(ViagemConteudo vc) throws SQLException {
-		String sql = "DELETE FROM viagens_conteudo WHERE id_viagem = ? AND id_pessoa = ?;";
+		String sql = "DELETE FROM viagens_conteudo WHERE id_viagem = ? AND id_funcionario = ?;";
 
 		PreparedStatement ps = getConnection().prepareStatement(sql);
 
 		ps.setInt(1, vc.getViagem().getId_viagem());
-		ps.setInt(2, vc.getFuncionario().getId());
+		ps.setInt(2, vc.getFuncionario().getId_funcionario());
 
 		return ps.executeUpdate() > 0;
 	}
@@ -121,25 +139,25 @@ public class ViagemDao extends BaseDao {
 
 		while (rs.next()) {
 			ViagemConteudo vc = new ViagemConteudo();
-			vc.getFuncionario().setId(rs.getInt("id_funcionario"));
-			vc.getFuncionario().setNome(rs.getString("f.nome"));
-
-			vc.getViagem().setId_viagem(rs.getInt("id_viagem"));
-			vc.getViagem().getVeiculo().setId(rs.getInt("id_veiculo"));
-			vc.getViagem().getVeiculo().setNome(rs.getString("vei.modelo"));
-			vc.getViagem().getMotorista().setId(rs.getInt("id_motorista"));
-			vc.getViagem().getMotorista().setNome(rs.getString("moto.nome"));
-			vc.getViagem().setTipo_viagem(rs.getString("tipo_viagem"));
-			Timestamp t = rs.getTimestamp("data_viagem");
-			Calendar c = Calendar.getInstance();
-			c.setTimeInMillis(t.getTime());
-			vc.getViagem().setData_viagem(c);
+			vc.setFuncionario(funcionarioDao.findOne(rs.getInt("id_funcionario")));
+			vc.setViagem(findOne(rs.getInt("id_viagem")));
 
 			viagemConteudos.add(vc);
 
 		}
 
 		return viagemConteudos;
+	}
+
+	public Calendar getCalendar(Timestamp timestamp) {
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(timestamp.getTime());
+		return c;
+	}
+
+	public Timestamp getTimestamp(Calendar calendar) {
+		Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
+		return timestamp;
 	}
 
 }

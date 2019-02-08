@@ -15,7 +15,7 @@ public class VeiculoDao extends BaseDao {
 		super();
 	}
 
-	public Veiculo buscaVeiculo(Integer id_veiculo) throws SQLException {
+	public Veiculo findOne(Integer id_veiculo) throws SQLException {
 
 		String sql = "SELECT * FROM veiculos WHERE id_veiculo = ?;";
 

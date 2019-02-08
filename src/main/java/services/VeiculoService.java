@@ -5,13 +5,14 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import entities.Motorista;
 import entities.Veiculo;
-import uDao.MotoristaDao;
 import uDao.VeiculoDao;
 
 @Path("/ws/veiculo")
@@ -25,6 +26,19 @@ public class VeiculoService {
 	}
 	
 	@GET
+	@Path("/{id}/busca")
+	public Veiculo findOne(@PathParam("id") Integer id) {
+		try {
+			return veiculoDao.findOne(id);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
+	@GET
 	@Path("/todos")
 	public List<Veiculo> findAll() {
 		try {
@@ -35,6 +49,19 @@ public class VeiculoService {
 		}
 
 		return null;
+	}
+	
+	@POST
+	@Path("/inserir")
+	public Boolean insertOne(Veiculo veiculo) {
+		try {
+			return veiculoDao.insertOne(veiculo);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 
 }

@@ -5,14 +5,14 @@ import java.util.Calendar;
 public class Viagem {
 
 	private Integer id_viagem;
-	private ClasseGenerica motorista;
-	private ClasseGenerica veiculo;
+	private Motorista motorista;
+	private Veiculo veiculo;
 	private String tipo_viagem;
 	private Calendar data_viagem;
 
 	public Viagem() {
-		motorista = new ClasseGenerica();
-		veiculo = new ClasseGenerica();
+		motorista = new Motorista();
+		veiculo = new Veiculo();
 		data_viagem = Calendar.getInstance();
 	}
 
@@ -24,28 +24,20 @@ public class Viagem {
 		this.id_viagem = id_viagem;
 	}
 
-	public ClasseGenerica getMotorista() {
+	public Motorista getMotorista() {
 		return motorista;
 	}
 
-	public void setMotorista(ClasseGenerica motorista) {
+	public void setMotorista(Motorista motorista) {
 		this.motorista = motorista;
 	}
 
-	public ClasseGenerica getVeiculo() {
+	public Veiculo getVeiculo() {
 		return veiculo;
 	}
 
-	public void setVeiculo(ClasseGenerica veiculo) {
+	public void setVeiculo(Veiculo veiculo) {
 		this.veiculo = veiculo;
-	}
-
-	public Calendar getData_viagem() {
-		return data_viagem;
-	}
-
-	public void setData_viagem(Calendar data_viagem) {
-		this.data_viagem = data_viagem;
 	}
 
 	public String getTipo_viagem() {
@@ -54,6 +46,14 @@ public class Viagem {
 
 	public void setTipo_viagem(String tipo_viagem) {
 		this.tipo_viagem = tipo_viagem;
+	}
+
+	public Calendar getData_viagem() {
+		return data_viagem;
+	}
+
+	public void setData_viagem(Calendar data_viagem) {
+		this.data_viagem = data_viagem;
 	}
 
 }
