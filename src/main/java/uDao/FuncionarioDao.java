@@ -108,6 +108,34 @@ public class FuncionarioDao extends BaseDao {
 		return funcionarios;
 	}
 
+	public List<Funcionario> findAll(Integer id_viagem) throws SQLException {
+		String sql = "SELECT * FROM funcionarios AS f " + "    INNER JOIN cargos AS c ON c.id_cargo = f.id_cargo "
+				+ "    INNER JOIN filiais AS fi ON fi.id_filial = f.id_filial " + "    WHERE f.id_funcionario NOT IN ( "
+				+ "    SELECT vc.id_funcionario FROM viagens_conteudo AS vc WHERE vc.id_viagem = ?);";
+
+		PreparedStatement ps = getConnection().prepareStatement(sql);
+		ps.setInt(1, id_viagem);
+		ResultSet rs = ps.executeQuery();
+
+		List<Funcionario> funcionarios = new ArrayList<>();
+
+		while (rs.next()) {
+			Funcionario f = new Funcionario();
+
+			f.setId_funcionario(rs.getInt("id_funcionario"));
+			f.setNome(rs.getString("nome"));
+			f.setCpf(rs.getString("cpf"));
+			f.getCargo().setId(rs.getInt("id_cargo"));
+			f.getCargo().setNome(rs.getString("c.nome"));
+			f.getFilial().setId(rs.getInt("id_filial"));
+			f.getFilial().setNome(rs.getString("fi.nome"));
+
+			funcionarios.add(f);
+		}
+
+		return funcionarios;
+	}
+
 	public class FilialDao extends BaseDao {
 		public FilialDao() {
 			super();
