@@ -7,8 +7,8 @@ import javax.ws.rs.core.Application;
 
 import services.MotoristaService;
 import services.VeiculoService;
+import services.ViagemConteudoService;
 import services.ViagemService;
-import uDao.VeiculoDao;
 
 public class ApplicationConfig extends Application {
 
@@ -19,6 +19,7 @@ public class ApplicationConfig extends Application {
 		recursos.add(MotoristaService.class);
 		recursos.add(VeiculoService.class);
 		recursos.add(ViagemService.class);
+		recursos.add(ViagemConteudoService.class);
 		return recursos;
 	}
 
