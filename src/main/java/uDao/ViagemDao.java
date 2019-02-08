@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import JDBC.BaseDao;
@@ -149,14 +148,12 @@ public class ViagemDao extends BaseDao {
 		return viagemConteudos;
 	}
 
-	public Calendar getCalendar(Timestamp timestamp) {
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(timestamp.getTime());
-		return c;
+	public Long getCalendar(Timestamp timestamp) {
+		return timestamp.getTime();
 	}
 
-	public Timestamp getTimestamp(Calendar calendar) {
-		Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
+	public Timestamp getTimestamp(Long data) {
+		Timestamp timestamp = new Timestamp(data);
 		return timestamp;
 	}
 

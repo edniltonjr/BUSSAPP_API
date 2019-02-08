@@ -1,19 +1,16 @@
 package entities;
 
-import java.util.Calendar;
-
 public class Viagem {
 
 	private Integer id_viagem;
 	private Motorista motorista;
 	private Veiculo veiculo;
 	private String tipo_viagem;
-	private Calendar data_viagem;
+	private Long data_viagem;
 
 	public Viagem() {
 		motorista = new Motorista();
 		veiculo = new Veiculo();
-		data_viagem = Calendar.getInstance();
 	}
 
 	public Integer getId_viagem() {
@@ -48,11 +45,11 @@ public class Viagem {
 		this.tipo_viagem = tipo_viagem;
 	}
 
-	public Calendar getData_viagem() {
+	public Long getData_viagem() {
 		return data_viagem;
 	}
 
-	public void setData_viagem(Calendar data_viagem) {
+	public void setData_viagem(Long data_viagem) {
 		this.data_viagem = data_viagem;
 	}
 
