@@ -3,6 +3,7 @@ package uDao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,17 +25,26 @@ public class ViagemDao extends BaseDao {
 		funcionarioDao = new FuncionarioDao();
 	}
 
-	public Boolean insertOne(Viagem v) throws SQLException {
+	public Integer insertOne(Viagem v) throws SQLException {
 		String sql = "INSERT INTO viagens(id_motorista, id_veiculo, tipo_viagem, data_viagem) VALUE (?, ?, ?, ?);";
 
-		PreparedStatement ps = getConnection().prepareStatement(sql);
+		PreparedStatement ps = getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 		ps.setInt(1, v.getMotorista().getId_motorista());
 		ps.setInt(2, v.getVeiculo().getId_veiculo());
 		ps.setString(3, v.getTipo_viagem());
 		ps.setTimestamp(4, getTimestamp(v.getData_viagem()));
 
-		return ps.executeUpdate() > 0;
+		if (ps.executeUpdate() > 0) {
+			ResultSet rs = ps.getGeneratedKeys();
+			if (rs.next()) {
+				Integer id_gerado = rs.getInt(1);
+
+				return id_gerado;
+			}
+		}
+
+		return 0;
 	}
 
 	public Boolean updateOne(Viagem v) throws SQLException {

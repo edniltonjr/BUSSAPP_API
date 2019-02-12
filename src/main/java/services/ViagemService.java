@@ -40,14 +40,14 @@ public class ViagemService {
 
 	@POST
 	@Path("/inserir")
-	public Boolean inserirViagem(Viagem viagem) {
+	public Integer inserirViagem(Viagem viagem) {
 		try {
 			return viagemDao.insertOne(viagem);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return false;
+		return 0;
 	}
 
 	@PUT
