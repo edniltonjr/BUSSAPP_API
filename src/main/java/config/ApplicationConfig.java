@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
+import services.FuncionarioService;
 import services.MotoristaService;
 import services.VeiculoService;
 import services.ViagemConteudoService;
@@ -20,6 +21,7 @@ public class ApplicationConfig extends Application {
 		recursos.add(VeiculoService.class);
 		recursos.add(ViagemService.class);
 		recursos.add(ViagemConteudoService.class);
+		recursos.add(FuncionarioService.class);
 		return recursos;
 	}
 
