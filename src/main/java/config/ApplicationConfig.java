@@ -17,11 +17,11 @@ public class ApplicationConfig extends Application {
 	public Set<Class<?>> getClasses() {
 		// TODO Auto-generated method stub
 		Set<Class<?>> recursos = new HashSet<Class<?>>();
+		recursos.add(FuncionarioService.class);
 		recursos.add(MotoristaService.class);
 		recursos.add(VeiculoService.class);
 		recursos.add(ViagemService.class);
 		recursos.add(ViagemConteudoService.class);
-		recursos.add(FuncionarioService.class);
 		return recursos;
 	}
 
